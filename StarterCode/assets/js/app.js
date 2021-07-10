@@ -79,65 +79,65 @@ function renderText(circletextGroup, newXScale, newYScale, chosenXAxis, chosenYA
 }
 
 // Tooltip circles for the x and y axis
-
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
-    // x axis
-    if (chosenXAxis === 'In poverty (%)') {
-        var xlabel = 'In poverty (%)';
-    }
-    else if (chosenXAxis === 'Age (Median)'){
-        var xlabel = 'Age (Median)';
-    }
+
+    // X axis.
+
+    if (chosenXAxis === "poverty") {
+        var xlabel = "Poverty: ";
+    } 
+    else if (chosenXAxis === "income") {
+        var xlabel = "Median Income: "
+    } 
     else {
-        var xlabel = 'Household (income)';
-    }
-    // y axis
-    if (chosenYAxis === 'Obese(%)') {
-        var ylabel = 'Obese(%)';
-    }
-    else if (chosenXAxis === 'Smokes(%)'){
-        var ylabel = 'Smokes(%)';
-    }
-    else {
-        var ylabel = 'Lacks Healthcare (%)';
+        var xlabel = "Age: "
     }
 
-    // The actual tooltip
+    // Y axis.
+    if (chosenYAxis === "healthcare") {
+        var ylabel = "Lacks Healthcare: ";
+    } 
+    else if (chosenYAxis === "smokes") {
+        var ylabel = "Smokers: "
+    } 
+    else {
+        var ylabel = "Obesity: "
+    }
 
+    // Tooltip using D3
     var toolTip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([80, -60])
-    .html(function(d) {
-        if (chosenXAxis === "Age (Median)") {
-            // Display Age
-            return (`${d.state}<hr>${xlabel} ${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}`);
-            } else if (chosenXAxis !== "In poverty (%)" && chosenXAxis !== "Age (Median)") {
-            // Display Income
-            return (`${d.state}<hr>${xlabel}${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}`);
-            } else {
-            // Display Poverty's percentage
-            return (`${d.state}<hr>${xlabel}${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}`);
-            }      
-    });
+        .offset([120, -60])   ///// maaaaaybeee
+        .attr("class", "d3-tip")
+        .html(function(d) {
+            if (chosenXAxis === "age") {
+                // Display Age
+                return (`${d.state}<hr>${xlabel} ${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}%`);
+                } 
+                else if (chosenXAxis !== "poverty" && chosenXAxis !== "age") {
+                // Display Income 
+                return (`${d.state}<hr>${xlabel}$${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}%`);
+                } 
+                else {
+                // Display Poverty's %
+                return (`${d.state}<hr>${xlabel}${d[chosenXAxis]}%<br>${ylabel}${d[chosenYAxis]}%`);
+                }      
+        });
 
     circlesGroup.call(toolTip);
-
-    circlesGroup.on('mouseover', function(data) {
-        toolTip.show(data, this);
-    })
-    .on('mouseout', function(data) {
-        toolTip.hide(data);
-    });
-    textGroup
-    .on("mouseover", function(data) {
-        toolTip.show(data, this);
-    })
-    .on("mouseout", function(data) {
-        toolTip.hide(data);
-    });
-
+    
+    circlesGroup.on("mouseover", function(data) {
+            toolTip.show(data, this);
+        })
+        .on("mouseout", function(data) {
+            toolTip.hide(data);
+        });
+    textGroup.on("mouseover", function(data) {
+            toolTip.show(data, this);
+        })
+        .on("mouseout", function(data) {
+            toolTip.hide(data);
+        });
     return circlesGroup;
-
 }
 
 // Make the program responsive

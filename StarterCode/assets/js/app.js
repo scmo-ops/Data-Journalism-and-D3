@@ -205,6 +205,35 @@ function makeResponsive() {
     .attr("dy", ".35em") 
     .text(d => d.abbr)
     .classed("stateText", true);
+    //tool tip update
+    var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circle, circleText);
+
+    /////  LABELS, AND LABEL GROUPS FOR THE X AND Y AXIS /////
+
+    // X axis
+
+    var xLabelGroup= chartGroup.append('g')
+    .attr('transform', `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+    var povertyLabel = xLabelGroup.append('text')
+    .attr('x', 0)
+    .attr('y', 20)
+    .attr('value', 'In poverty (%)') // uuuh sure
+    .classed('active', true)
+    .text('In poverty (%)');
+    var ageLabel = xLabelGroup.append('text')
+    .attr('x', 0)
+    .attr('y', 40)
+    .attr('value', 'Age (Median)') // uuuh sure
+    .classed('active', true)
+    .text('Age (Median)');
+    var incomeLabel = xLabelGroup.append('text')
+    .attr('x', 0)
+    .attr('y', 60)
+    .attr('value', 'Household (income)') // uuuh sure
+    .classed('active', true)
+    .text('Household (income)');
+    
+
 
 
 }

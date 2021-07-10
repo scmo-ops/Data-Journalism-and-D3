@@ -15,10 +15,8 @@ var margin = {
 
 var height = svgHeight - margin.top - margin.bottom;
 var width = svgWidth - margin.left - margin.right;
-var chosenXAxis = 'In poverty (%)';  // axis name 1
-var chosenXAxis1 = 'Age (Median)';
-var chosenYAxis ='Obese(%)';
-var chosenYAxis1 = 'Smokes(%)'; 
+var chosenXAxis = 'poverty';
+var chosenYAxis ='healthcare';
 
 ///////// THIS UPDATS X AXIS AND X  -SCALE /////////
 
@@ -260,12 +258,17 @@ function makeResponsive() {
     .text('Obese (%)');
 
     ////// EVENT LISTENERS /////
-
+    
     // Listeners for x labels
-    xLabelGroup.sellectAll('text').on('click', function() {
-        chosenXAxis = d3.select(this).attr('value');
-        xLinearScale = xScale(demoData, chosenXAxis, width);
-        xAxis = renderXAxes(xLinearScale, xAxis);
+    xLabelGroup.selectAll("text")
+            .on("click", function() {
+                // Grab selected label.
+                chosenXAxis = d3.select(this).attr("value");
+                // Update xLinearScale.
+                xLinearScale = xScale(demoData, chosenXAxis, width);
+                // Render xAxis.
+                xAxis = renderXAxes(xLinearScale, xAxis);
+                // Switch active/inactive labels.
         if (chosenXAxis === "In poverty (%)") {
             povertyLabel.classed("active", true).classed("inactive", false);
             ageLabel.classed("active", false).classed("inactive", true);
@@ -286,7 +289,7 @@ function makeResponsive() {
     });
     
     // Listeners for y labels
-    yLabelGroup.sellectAll('text').on('click', function() {
+    yLabelgroup.sellectAll('text').on('click', function() {
         chosenYAxis = d3.select(this).attr('value');
         yLinearScale = yScale(demoData, chosenYAxis, height);
         yAxis = renderYAxes(yLinearScale, yAxis);

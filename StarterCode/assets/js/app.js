@@ -171,32 +171,38 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
     d3.csv("assets/data/data.csv").then(function(demoData, err) {
         if (err) throw err;
-        // Parse data.
+
+        // Data parsing
         demoData.forEach(function(data) {
             data.poverty = +data.poverty;
-            data.healthcare = +data.healthcare;
             data.age = +data.age;
-            data.smokes = +data.smokes;
             data.income = +data.income;
+            data.healthcare = +data.healthcare;
             data.obesity = data.obesity;
+            data.smokes = +data.smokes;
+            
         });
-        // Create x/y linear scales.
+
+        // Linear scales.
         var xLinearScale = xScale(demoData, chosenXAxis, chartWidth);
         var yLinearScale = yScale(demoData, chosenYAxis, chartHeight);
-        // Create initial axis functions.
+
+        // Axises' funtions.
         var bottomAxis =d3.axisBottom(xLinearScale);
         var leftAxis = d3.axisLeft(yLinearScale);
-        // Append x axis.
-        var xAxis = chartGroup.append("g")
-            .attr("transform", `translate(0, ${chartHeight})`)
-            .call(bottomAxis);
-        // Append y axis.
-        var yAxis = chartGroup.append("g")
-            .call(leftAxis);
-        // Set data used for circles.
-        var circlesGroup = chartGroup.selectAll("circle")
-            .data(demoData);
-        // Bind data.
+
+        var xAxis = chartGroup
+        .append("g")
+        .attr("transform", `translate(0, ${chartHeight})`)
+        .call(bottomAxis);
+
+        var yAxis = chartGroup
+        .append("g")
+        .call(leftAxis);
+
+        var circlesGroup = chartGroup
+        .selectAll("circle")
+        .data(demoData);
         var elemEnter = circlesGroup.enter();
 
         // This creates the circles with a text

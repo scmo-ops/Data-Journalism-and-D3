@@ -93,10 +93,10 @@ function renderCircles(circleG, newXScale, chosenXAxis, newYScale, chosenYAxis) 
     return circleG;
 }
 
+// Tooltip circles for the x and y axis
 
-// Tooltip circles
-function updateToolTip(chosenXAxis, circlesGroup) {
-    var label;
+function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
+    var label; // x axis
     if (chosenXAxis === 'In poverty (%)') {
         label = 'In poverty (%)';
     }
@@ -106,9 +106,21 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     else {
         label = 'Household (income)';
     }
+    // y axis
+    if (chosenYAxis === 'Obese(%)') {
+        label = 'Obese(%)';
+    }
+    else if (chosenXAxis === 'Smokes(%)'){
+        label = 'Smokes(%)';
+    }
+    else {
+        label = 'Lacks Healthcare (%)';
+    }
+
+    // The actual tooltip
 
     var toolTip = d3.tip()
-    .attr('class', 'tooltip')
+    .attr('class', 'd3-tip')
     .offset([80, -60])
     .html(function(d) {
         return (`${d.state}<br>${label} ${d[chosenXAxis]}`);

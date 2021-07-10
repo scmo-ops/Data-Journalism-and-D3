@@ -251,7 +251,7 @@ function makeResponsive() {
     .attr('value', 'Smokes (%)')
     .classed('inactive', true)
     .text('Smokes (%)');
-    var hsmokesLabel = yLabelgroup.append('text')
+    var obeseLabel = yLabelgroup.append('text')
     .attr('x', 0 - (height/2))
     .attr('y', 0 -margin.left)
     .attr('dy', '1em')
@@ -286,23 +286,23 @@ function makeResponsive() {
     });
     
     // Listeners for y labels
-    xLabelGroup.sellectAll('text').on('click', function() {
-        chosenXAxis = d3.select(this).attr('value');
-        xLinearScale = xScale(demoData, chosenXAxis, width);
-        xAxis = renderXAxes(xLinearScale, xAxis);
-        if (chosenXAxis === "In poverty (%)") {
-            povertyLabel.classed("active", true).classed("inactive", false);
-            ageLabel.classed("active", false).classed("inactive", true);
-            incomeLabel.classed("active", false).classed("inactive", true);
+    yLabelGroup.sellectAll('text').on('click', function() {
+        chosenYAxis = d3.select(this).attr('value');
+        yLinearScale = yScale(demoData, chosenYAxis, height);
+        yAxis = renderYAxes(yLinearScale, yAxis);
+        if (chosenYAxis === "Lacks Healthcare (%)") {
+            healthcareLabel.classed("active", true).classed("inactive", false);
+            hsmokesLabel.classed("active", false).classed("inactive", true);
+            obeseLabel.classed("active", false).classed("inactive", true);
 
-        } else if (chosenXAxis === "Age (Median)") {
-            povertyLabel.classed("active", false).classed("inactive", true);
-            ageLabel.classed("active", true).classed("inactive", false);
-            incomeLabel.classed("active", false).classed("inactive", true);
+        } else if (chosenXAxis === "Smokes (%)") {
+            healthcareLabel.classed("active", false).classed("inactive", true);
+            hsmokesLabel.classed("active", true).classed("inactive", false);
+            obeseLabel.classed("active", false).classed("inactive", true);
         } else {
-            povertyLabel.classed("active", false).classed("inactive", true);
-            ageLabel.classed("active", false).classed("inactive", true)
-            incomeLabel.classed("active", true).classed("inactive", false);
+            healthcareLabel.classed("active", false).classed("inactive", true);
+            hsmokesLabel.classed("active", false).classed("inactive", true)
+            obeseLabel.classed("active", true).classed("inactive", false);
         }
         circle = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circle, circleText);
@@ -314,8 +314,11 @@ function makeResponsive() {
 
 
 
+ }).catch(function(err) {
+     console.log(err);
+ });
+
 }
-    
 // step 5: set up the scales
 
 

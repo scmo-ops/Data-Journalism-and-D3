@@ -7,78 +7,75 @@ var svgHeight = window.innerHeight/1.2;
 
 // step 2: define margins and set up initial parameters
 var margin = {
-  top: 20,
-  right: 40,
-  bottom: 80,
-  left: 100
-};
+    top: 20,
+    right: 40,
+    bottom: 80,
+    left: 100
+  };
 
 var height = svgHeight - margin.top - margin.bottom;
 var width = svgWidth - margin.left - margin.right;
 var chosenXAxis = 'poverty';
-var chosenYAxis ='healthcare';
+var chosenYAxis ='healthcare'; 
 
 ///////// THIS UPDATS X AXIS AND X  -SCALE /////////
 
 // Updating x-scale var upon click on axis label
 
-function xScale(hData, chosenXAxis) {
+function xScale(data, chosenXAxis, width) {
     // create scales
     var xLinearScale = d3.scaleLinear()
-      .domain([d3.min(hData, d => d[chosenXAxis]) * 0.8,
-        d3.max(hData, d => d[chosenXAxis]) * 1.1
-      ])
-      .range([0, width]);
-    
+        .domain([d3.min(data, d => d[chosenXAxis]) * .8,
+            d3.max(data, d => d[chosenXAxis]) * 1.1])
+        .range([0, width]);
     return xLinearScale;
-    
+
 }
 
 // Update xAxis var upon clikc on axis label
 
-function renderYAxes(newXScale, xAxis) {
+function renderXAxes(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
     xAxis.transition()
     .duration(1000)
     .call(bottomAxis);
     return xAxis;
 }
+// Update y label var upon click on axis label
+function yScale(data, chosenYAxis, height) {
 
-///////// THIS UPDATS Y AXIS AND Y-SCALE /////////
-
-// Updating y-scale var upon click on axis label
-
-function yScale(hData, chosenYAxis) {
-    // create scales
-    var xLinearScale = d3.scaleLinear()
-      .domain([d3.min(hData, d => d[chosenYAxis]) * 0.8,
-        d3.max(hData, d => d[chosenXAxis]) * 1.2
-      ])
-      .range([0, width]); //might go wrong
-    
-    return xLinearScale;
+    var yLinearScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d[chosenYAxis]) * .8,
+            d3.max(data, d => d[chosenYAxis]) * 1.2])
+        .range([height, 0]);
+    return yLinearScale;
 }
-
-// Update yAxis var upon clikc on axis label
-
+// Update yAxis var upon click on axis label
 function renderYAxes(newYScale, yAxis) {
-    var SideAxis = d3.axisBottom(newYScale);
+    var leftAxis = d3.axisLeft(newYScale);
     yAxis.transition()
-    .duration(1000)
-    .call(SideAxis);
+        .duration(1000)
+        .call(leftAxis);
     return yAxis;
 }
-
 
 // Funtion that updates the circles gruop with a transition
 // to new circles including the y-axis ¬¬
 
-function renderCircles(circleG, newXScale, chosenXAxis, newYScale, chosenYAxis) {
-    circleG.transition()
-    .duration(1000)
-    .attr('cx', d => newXScale(d[chosenXAxis]))
-    .attr('cy', d => newYScale(d[chosenYAxis]));
-    return circleG;
+function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYAxis) {
+    circlesGroup.transition()
+        .duration(1000)
+        .attr("cx", d => newXScale(d[chosenXAxis]))
+        .attr("cy", d => newYScale(d[chosenYAxis]));
+    return circlesGroup;
+}
+// Updates circle text
+function renderText(circletextGroup, newXScale, newYScale, chosenXAxis, chosenYAxis) {
+    circletextGroup.transition()
+        .duration(1000)
+        .attr("x", d => newXScale(d[chosenXAxis]))
+        .attr("y", d => newYScale(d[chosenYAxis]));
+    return circletextGroup;
 }
 
 // Tooltip circles for the x and y axis

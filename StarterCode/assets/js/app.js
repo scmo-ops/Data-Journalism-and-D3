@@ -28,8 +28,72 @@ var svg = d3.select("#scatter")
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-var chosenXAxis = "hair_length";  // axis name
+var chosenXAxis = 'In poverty (%)';  // axis name 1
+var chosenXAxis1 = 'Age (Median)'
+var chosenYAxis ='Obese(%)'
+var chosenYAxis1 = 'Smokes(%)' 
 
+// Updating x-scale var upon click on axis label
+
+function xScale(hData, chosenXAxis) {
+    // create scales
+    var xLinearScale = d3.scaleLinear()
+      .domain([d3.min(hData, d => d[chosenXAxis]) * 0.8,
+        d3.max(hData, d => d[chosenXAxis]) * 1.2
+      ])
+      .range([0, width]);
+    
+    return xLinearScale;
+    
+}
+
+// Update xAxis var upon clikc on axis label
+
+function renderAxes(newXScale, xAxis) {
+    var bottomAxis = d3.axisBottom(newXScale);
+    xAxis.transition().duration(1000).call(bottomAxis);
+    return xAxis;
+}
+
+// Funtion that updates the circles gruop with a transition
+// to new circles
+
+function renderCircles(circleG, newXScale, chosenXAxis) {
+    circlesGroup.transition()
+    .duration(1000)
+    .attr('cx', d => newXScale(d[chosenXAxis]));
+    return circlesGroup;
+}
+
+// Tooltip circles
+function updateToolTip(chosenXAxis, circlesGroup) {
+    var label;
+    if (chosenXAxis === 'In poverty (%)') {
+        label = 'In poverty (%)';
+    }
+    else if (chosenXAxis === 'Age (Median)'){
+        label = 'Age (Median)';
+    }
+    else {
+        label = 'Household (income)';
+    }
+
+    var toolTip = d3.tip()
+    .attr('class', 'tooltip')
+    .offset([80, -60])
+    .html(function(d) {
+        return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
+    });
+
+    circlesGroup.call(toolTip);
+
+    circlesGroup.on('mouseover', function(data) {
+        toolTip.show(data);
+    })
+    .on('mouse')
+
+
+}
 // step 5: set up the scales
 var xScale = d3.scaleLinear()
   .domain([0, pizzasEatenByMonth.length])

@@ -145,7 +145,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
 
 }
 
-// Read csv file and run the graphs
+// Make the program responsive
 function makeResponsive() {
     var svgArea = d3.select("#scatter").select('svg');
     if (!svgArea.empty()) {
@@ -157,9 +157,8 @@ function makeResponsive() {
     .attr("width", svgWidth);
     
     var chartGroup = svg.append("g")
-    .attr("transform", `translate(${margin.left}, 
-        ${margin.top})`);
-    d3.csv('../data/data.csv').then(function(demoData, err) {
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    d3.csv('assets/data/data.csv').then(function(demoData, err) {
         if (err) throw err;
         // Parse data.
         demoData.forEach(function(data) {
@@ -181,25 +180,26 @@ function makeResponsive() {
     var bottomAxis = d3.axisBottom(xLinearScale);
     var sideAxis = d3.axisLeft(yLinearScale);
 
-    //Append the y axis
-    var yAxis = chartGroup.append('g')
-    .call(sideAxis);
-
-    //Append the x axis
-    var xAxis = chartGroup.append('g')
-    .attr('transform', `translate(0, ${height})`)
+    // Append x axis.
+    var xAxis = chartGroup.append("g")
+    .attr("transform", `translate(0, ${height})`)
     .call(bottomAxis);
-
-    // Circle data binding
-    var circlesGroup = chartGroup.sellectAll('circle')
+    // Append y axis.
+    var yAxis = chartGroup.append("g")
+    .call(sideAxis);
+    // Set data used for circles.
+    var circlesGroup = chartGroup.selectAll("circle")
     .data(demoData);
-    var enterData = circlesGroup.enter();
-    var circle = enterData.append('circle')
-    .attr('cx', d => xLinearScale(d[chosenXAxis]))
-    .attr('cy', d => yLinearScale(d[chosenYAxis]))
-    .attr('r', 15)
-    .classed('stateCircle', true);
-    var circleText = enterData.append('text')
+    // Bind data.
+    var elemEnter = circlesGroup.enter();
+    // Create circles.
+    var circle = elemEnter.append("circle")
+    .attr("cx", d => xLinearScale(d[chosenXAxis]))
+    .attr("cy", d => yLinearScale(d[chosenYAxis]))
+    .attr("r", 15)
+    .classed("stateCircle", true);
+    // Create circle text.
+    var circleText = elemEnter.append("text")            
     .attr("x", d => xLinearScale(d[chosenXAxis]))
     .attr("y", d => yLinearScale(d[chosenYAxis]))
     .attr("dy", ".35em") 
@@ -213,7 +213,7 @@ function makeResponsive() {
     // X axis
 
     var xLabelGroup= chartGroup.append('g')
-    .attr('transform', `translate(${chartWidth / 2}, ${chartHeight + 20})`);
+    .attr('transform', `translate(${width / 2}, ${height + 20})`);
     var povertyLabel = xLabelGroup.append('text')
     .attr('x', 0)
     .attr('y', 20)
@@ -319,8 +319,6 @@ function makeResponsive() {
  });
 
 }
-// step 5: set up the scales
-
 
 // When the browser loads, makeResponsive() is called.
 makeResponsive();

@@ -16,9 +16,6 @@ var margin = {
 var height = svgHeight - margin.top - margin.bottom;
 var width = svgWidth - margin.left - margin.right;
 
-// step 3: importing the data and run everything
-var pizzasEatenByMonth = [15, 5, 25, 18, 12, 22, 0, 4, 15, 10, 21, 2];
-
 // step 4: append svg and group 
 var svg = d3.select("#scatter")
   .append("svg")
@@ -33,13 +30,15 @@ var chosenXAxis1 = 'Age (Median)'
 var chosenYAxis ='Obese(%)'
 var chosenYAxis1 = 'Smokes(%)' 
 
+///////// THIS UPDATS X AXIS AND X  -SCALE /////////
+
 // Updating x-scale var upon click on axis label
 
 function xScale(hData, chosenXAxis) {
     // create scales
     var xLinearScale = d3.scaleLinear()
       .domain([d3.min(hData, d => d[chosenXAxis]) * 0.8,
-        d3.max(hData, d => d[chosenXAxis]) * 1.2
+        d3.max(hData, d => d[chosenXAxis]) * 1.1
       ])
       .range([0, width]);
     
@@ -51,18 +50,33 @@ function xScale(hData, chosenXAxis) {
 
 function renderAxes(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
-    xAxis.transition().duration(1000).call(bottomAxis);
+    xAxis.transition()
+    .duration(1000)
+    .call(bottomAxis);
     return xAxis;
 }
 
+///////// THIS UPDATS Y AXIS AND Y-SCALE /////////
+
+// Updating x-scale var upon click on axis label
+
+function xScale(hData, chosenXAxis) {
+    // create scales
+    var xLinearScale = d3.scaleLinear()
+      .domain([d3.min(hData, d => d[chosenXAxis]) * 0.8,
+        d3.max(hData, d => d[chosenXAxis]) * 1.1
+      ])
+      .range([0, width]);
+    
+    return xLinearScale;
 // Funtion that updates the circles gruop with a transition
 // to new circles
 
 function renderCircles(circleG, newXScale, chosenXAxis) {
-    circlesGroup.transition()
+    circleG.transition()
     .duration(1000)
     .attr('cx', d => newXScale(d[chosenXAxis]));
-    return circlesGroup;
+    return circleG;
 }
 
 // Tooltip circles
@@ -90,10 +104,30 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     circlesGroup.on('mouseover', function(data) {
         toolTip.show(data);
     })
-    .on('mouse')
+    .on('mouseout', function(data) {
+        toolTip.hide(data);
+    });
 
+    return circlesGroup;
 
 }
+
+// Read csv file and run the graphs
+
+d3.csv('data.csv').then(function(data, err) {
+    if (err) throw err;
+
+    // parsing
+    data.forEach(function(data1) {
+        data1.poverty = +data1.poverty;
+        data1.poverty = +data1.poverty;
+        data1.poverty = +data1.poverty;
+        data1.poverty = +data1.poverty;
+        data1.poverty = +data1.poverty;
+        data1.poverty = +data1.poverty;
+
+    })
+})
 // step 5: set up the scales
 var xScale = d3.scaleLinear()
   .domain([0, pizzasEatenByMonth.length])

@@ -16,9 +16,9 @@ var margin = {
 var height = svgHeight - margin.top - margin.bottom;
 var width = svgWidth - margin.left - margin.right;
 var chosenXAxis = 'In poverty (%)';  // axis name 1
-var chosenXAxis1 = 'Age (Median)'
-var chosenYAxis ='Obese(%)'
-var chosenYAxis1 = 'Smokes(%)' 
+var chosenXAxis1 = 'Age (Median)';
+var chosenYAxis ='Obese(%)';
+var chosenYAxis1 = 'Smokes(%)'; 
 
 ///////// THIS UPDATS X AXIS AND X  -SCALE /////////
 
@@ -171,7 +171,36 @@ function makeResponsive() {
             data.obesity = data.obesity;
     });
 
-    ///// SET THE SCALES FOR X AND Y //////
+    ///// SET THE CHART DATA FOR X AND Y //////
+    
+    // linear scales
+    var xLinearScale = xScale(demoData, chosenXAxis, width);
+    var yLinearScale = yScale(demoData, chosenYAxis, height);
+
+    // Funtions
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var sideAxis = d3.axisLeft(yLinearScale);
+
+    //Append the y axis
+    var yAxis = chartGroup.append('g')
+    .call(sideAxis);
+
+    //Append the x axis
+    var xAxis = chartGroup.append('g')
+    .attr('transform', `translate(0, ${height})`)
+    .call(bottomAxis);
+
+    // Circle data binding
+    var circlesGroup = chartGroup.sellectAll('circle')
+    .data(demoData)
+    .enter()
+    .append('circle')
+    .attr('cx', d => xLinearScale(d[chosenXAxis]))
+    .attr('cy', d => yLinearScale(d[chosenYAxis]))
+    .attr('r', 15)
+    .classed('stateCircle', true);
+
+
 }
     
 // step 5: set up the scales

@@ -224,15 +224,93 @@ function makeResponsive() {
     .attr('x', 0)
     .attr('y', 40)
     .attr('value', 'Age (Median)') // uuuh sure
-    .classed('active', true)
+    .classed('inactive', true)
     .text('Age (Median)');
     var incomeLabel = xLabelGroup.append('text')
     .attr('x', 0)
     .attr('y', 60)
     .attr('value', 'Household (income)') // uuuh sure
-    .classed('active', true)
+    .classed('inactive', true)
     .text('Household (income)');
+
+    // Y axis
+
+    var yLabelgroup = chartGroup.append('g')
+    .attr('transform', 'rotate(-90)');
+    var healthcareLabel = yLabelgroup.append('text')
+    .attr('x', 0 - (height/2))
+    .attr('y', 40 -margin.left)
+    .attr('dy', '1em')
+    .attr('value', 'Lacks Healthcare (%)')
+    .classed('inactive', true)
+    .text('Lacks Healthcare (%)');
+    var hsmokesLabel = yLabelgroup.append('text')
+    .attr('x', 0 - (height/2))
+    .attr('y', 20 -margin.left)
+    .attr('dy', '1em')
+    .attr('value', 'Smokes (%)')
+    .classed('inactive', true)
+    .text('Smokes (%)');
+    var hsmokesLabel = yLabelgroup.append('text')
+    .attr('x', 0 - (height/2))
+    .attr('y', 0 -margin.left)
+    .attr('dy', '1em')
+    .attr('value', 'Obese (%)')
+    .classed('active', true)
+    .text('Obese (%)');
+
+    ////// EVENT LISTENERS /////
+
+    // Listeners for x labels
+    xLabelGroup.sellectAll('text').on('click', function() {
+        chosenXAxis = d3.select(this).attr('value');
+        xLinearScale = xScale(demoData, chosenXAxis, width);
+        xAxis = renderXAxes(xLinearScale, xAxis);
+        if (chosenXAxis === "In poverty (%)") {
+            povertyLabel.classed("active", true).classed("inactive", false);
+            ageLabel.classed("active", false).classed("inactive", true);
+            incomeLabel.classed("active", false).classed("inactive", true);
+
+        } else if (chosenXAxis === "Age (Median)") {
+            povertyLabel.classed("active", false).classed("inactive", true);
+            ageLabel.classed("active", true).classed("inactive", false);
+            incomeLabel.classed("active", false).classed("inactive", true);
+        } else {
+            povertyLabel.classed("active", false).classed("inactive", true);
+            ageLabel.classed("active", false).classed("inactive", true)
+            incomeLabel.classed("active", true).classed("inactive", false);
+        }
+        circle = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circle, circleText);
+        circleText=renderText(circleText, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+    });
     
+    // Listeners for y labels
+    xLabelGroup.sellectAll('text').on('click', function() {
+        chosenXAxis = d3.select(this).attr('value');
+        xLinearScale = xScale(demoData, chosenXAxis, width);
+        xAxis = renderXAxes(xLinearScale, xAxis);
+        if (chosenXAxis === "In poverty (%)") {
+            povertyLabel.classed("active", true).classed("inactive", false);
+            ageLabel.classed("active", false).classed("inactive", true);
+            incomeLabel.classed("active", false).classed("inactive", true);
+
+        } else if (chosenXAxis === "Age (Median)") {
+            povertyLabel.classed("active", false).classed("inactive", true);
+            ageLabel.classed("active", true).classed("inactive", false);
+            incomeLabel.classed("active", false).classed("inactive", true);
+        } else {
+            povertyLabel.classed("active", false).classed("inactive", true);
+            ageLabel.classed("active", false).classed("inactive", true)
+            incomeLabel.classed("active", true).classed("inactive", false);
+        }
+        circle = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circle, circleText);
+        circleText=renderText(circleText, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+    });
+
+
+
 
 
 

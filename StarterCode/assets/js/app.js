@@ -16,7 +16,8 @@ var margin = {
 var height = svgHeight - margin.top - margin.bottom;
 var width = svgWidth - margin.left - margin.right;
 
-// step 4: append svg and group 
+// Make responsive
+
 var svg = d3.select("#scatter")
   .append("svg")
   .attr("height", svgHeight)
@@ -88,33 +89,33 @@ function renderYAxes(newYScale, yAxis) {
 function renderCircles(circleG, newXScale, chosenXAxis, newYScale, chosenYAxis) {
     circleG.transition()
     .duration(1000)
-    .attr('x', d => newXScale(d[chosenXAxis]))
-    .attr('y', d => newYScale(d[chosenYAxis]));
+    .attr('cx', d => newXScale(d[chosenXAxis]))
+    .attr('cy', d => newYScale(d[chosenYAxis]));
     return circleG;
 }
 
 // Tooltip circles for the x and y axis
 
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
-    var label; // x axis
+    // x axis
     if (chosenXAxis === 'In poverty (%)') {
-        label = 'In poverty (%)';
+        var xlabel = 'In poverty (%)';
     }
     else if (chosenXAxis === 'Age (Median)'){
-        label = 'Age (Median)';
+        var xlabel = 'Age (Median)';
     }
     else {
-        label = 'Household (income)';
+        var xlabel = 'Household (income)';
     }
     // y axis
     if (chosenYAxis === 'Obese(%)') {
-        label = 'Obese(%)';
+        var ylabel = 'Obese(%)';
     }
     else if (chosenXAxis === 'Smokes(%)'){
-        label = 'Smokes(%)';
+        var ylabel = 'Smokes(%)';
     }
     else {
-        label = 'Lacks Healthcare (%)';
+        var ylabel = 'Lacks Healthcare (%)';
     }
 
     // The actual tooltip
@@ -123,15 +124,31 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
     .attr('class', 'd3-tip')
     .offset([80, -60])
     .html(function(d) {
-        return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
+        if (chosenXAxis === "Age (Median)") {
+            // Display Age
+            return (`${d.state}<hr>${xlabel} ${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}`);
+            } else if (chosenXAxis !== "In poverty (%)" && chosenXAxis !== "Age (Median)") {
+            // Display Income
+            return (`${d.state}<hr>${xlabel}${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}`);
+            } else {
+            // Display Poverty's percentage
+            return (`${d.state}<hr>${xlabel}${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}`);
+            }      
     });
 
     circlesGroup.call(toolTip);
 
     circlesGroup.on('mouseover', function(data) {
-        toolTip.show(data);
+        toolTip.show(data, this);
     })
     .on('mouseout', function(data) {
+        toolTip.hide(data);
+    });
+    textGroup
+    .on("mouseover", function(data) {
+        toolTip.show(data, this);
+    })
+    .on("mouseout", function(data) {
         toolTip.hide(data);
     });
 

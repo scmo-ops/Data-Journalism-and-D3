@@ -192,13 +192,19 @@ function makeResponsive() {
 
     // Circle data binding
     var circlesGroup = chartGroup.sellectAll('circle')
-    .data(demoData)
-    .enter()
-    .append('circle')
+    .data(demoData);
+    var enterData = circlesGroup.enter();
+    var circle = enterData.append('circle')
     .attr('cx', d => xLinearScale(d[chosenXAxis]))
     .attr('cy', d => yLinearScale(d[chosenYAxis]))
     .attr('r', 15)
     .classed('stateCircle', true);
+    var circleText = enterData.append('text')
+    .attr("x", d => xLinearScale(d[chosenXAxis]))
+    .attr("y", d => yLinearScale(d[chosenYAxis]))
+    .attr("dy", ".35em") 
+    .text(d => d.abbr)
+    .classed("stateText", true);
 
 
 }

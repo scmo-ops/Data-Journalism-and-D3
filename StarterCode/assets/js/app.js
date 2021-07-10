@@ -80,15 +80,19 @@ function renderYAxes(newYScale, yAxis) {
     .call(SideAxis);
     return yAxis;
 }
-// Funtion that updates the circles gruop with a transition
-// to new circles
 
-function renderCircles(circleG, newXScale, chosenXAxis) {
+
+// Funtion that updates the circles gruop with a transition
+// to new circles including the y-axis ¬¬
+
+function renderCircles(circleG, newXScale, chosenXAxis, newYScale, chosenYAxis) {
     circleG.transition()
     .duration(1000)
-    .attr('cx', d => newXScale(d[chosenXAxis]));
+    .attr('x', d => newXScale(d[chosenXAxis]))
+    .attr('y', d => newYScale(d[chosenYAxis]));
     return circleG;
 }
+
 
 // Tooltip circles
 function updateToolTip(chosenXAxis, circlesGroup) {

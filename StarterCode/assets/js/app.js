@@ -2,8 +2,8 @@
 
 // Def the margins with the window size
 
-var svgWidth = 900;
-var svgHeight = 360;
+var svgWidth = window.innerWidth/1.7;
+var svgHeight = window.innerHeight/1.2;
 
 // step 2: define margins and set up initial parameters
 var margin = {
@@ -15,17 +15,6 @@ var margin = {
 
 var height = svgHeight - margin.top - margin.bottom;
 var width = svgWidth - margin.left - margin.right;
-
-// Make responsive
-
-var svg = d3.select("#scatter")
-  .append("svg")
-  .attr("height", svgHeight)
-  .attr("width", svgWidth);
-
-var chartGroup = svg.append("g")
-  .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
 var chosenXAxis = 'In poverty (%)';  // axis name 1
 var chosenXAxis1 = 'Age (Median)'
 var chosenYAxis ='Obese(%)'
@@ -157,68 +146,39 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
 }
 
 // Read csv file and run the graphs
+function makeResponsive() {
+    var svgArea = d3.select("#scatter").select('svg');
+    if (!svgArea.empty()) {
+        svgArea.remove();
+    }
+    var svg= d3.select('#scatter')
+    .append("svg")
+    .attr("height", svgHeight)
+    .attr("width", svgWidth);
+    
+    var chartGroup = svg.append("g")
+    .attr("transform", `translate(${margin.left}, 
+        ${margin.top})`);
+    d3.csv('../data/data.csv').then(function(demoData, err) {
+        if (err) throw err;
+        // Parse data.
+        demoData.forEach(function(data) {
+            data.poverty = +data.poverty;
+            data.healthcare = +data.healthcare;
+            data.age = +data.age;
+            data.smokes = +data.smokes;
+            data.income = +data.income;
+            data.obesity = data.obesity;
+    });
 
-d3.csv('data.csv').then(function(data, err) {
-    if (err) throw err;
-
-    // parsing
-    data.forEach(function(data1) {
-        data1.poverty = +data1.poverty;
-        data1.poverty = +data1.poverty;
-        data1.poverty = +data1.poverty;
-        data1.poverty = +data1.poverty;
-        data1.poverty = +data1.poverty;
-        data1.poverty = +data1.poverty;
-
-    })
-})
+    ///// SET THE SCALES FOR X AND Y //////
+}
+    
 // step 5: set up the scales
-var xScale = d3.scaleLinear()
-  .domain([0, pizzasEatenByMonth.length])
-  .range([0, width]);
 
-var yScale = d3.scaleLinear()
-  .domain([0, d3.max(pizzasEatenByMonth)])
-  .range([height, 0]);
 
-// line generator
-var line = d3.line()
-  .x((d, i) => xScale(i))
-  .y(d => yScale(d));
+// When the browser loads, makeResponsive() is called.
+makeResponsive();
 
-// create path
-chartGroup.append("path")
-  .attr("d", line(pizzasEatenByMonth))
-  .attr("fill", "none")
-  .attr("stroke", "green");
-
-// append circles to data points
-var circlesGroup = chartGroup.selectAll("circle")
-  .data(pizzasEatenByMonth)
-  .enter()
-  .append("circle")
-  .attr("r", "10")
-  .attr("fill", "red");
-
-// Event listeners with transitions
-circlesGroup.on("mouseover", function() {
-  d3.select(this)
-    .transition()
-    .duration(1000)
-    .attr("r", 20)
-    .attr("fill", "lightblue");
-})
-  .on("mouseout", function() {
-    d3.select(this)
-      .transition()
-      .duration(1000)
-      .attr("r", 10)
-      .attr("fill", "red");
-  });
-
-// transition on page load
-chartGroup.selectAll("circle")
-  .transition()
-  .duration(1000)
-  .attr("cx", (d, i) => xScale(i))
-  .attr("cy", d => yScale(d));
+// When the browser window is resized, responsify() is called.
+d3.select(window).on("resize", makeResponsive);

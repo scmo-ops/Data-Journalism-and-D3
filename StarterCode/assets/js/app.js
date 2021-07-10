@@ -48,7 +48,7 @@ function xScale(hData, chosenXAxis) {
 
 // Update xAxis var upon clikc on axis label
 
-function renderAxes(newXScale, xAxis) {
+function renderYAxes(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
     xAxis.transition()
     .duration(1000)
@@ -58,17 +58,28 @@ function renderAxes(newXScale, xAxis) {
 
 ///////// THIS UPDATS Y AXIS AND Y-SCALE /////////
 
-// Updating x-scale var upon click on axis label
+// Updating y-scale var upon click on axis label
 
-function xScale(hData, chosenXAxis) {
+function yScale(hData, chosenYAxis) {
     // create scales
     var xLinearScale = d3.scaleLinear()
-      .domain([d3.min(hData, d => d[chosenXAxis]) * 0.8,
-        d3.max(hData, d => d[chosenXAxis]) * 1.1
+      .domain([d3.min(hData, d => d[chosenYAxis]) * 0.8,
+        d3.max(hData, d => d[chosenXAxis]) * 1.2
       ])
-      .range([0, width]);
+      .range([0, width]); //might go wrong
     
     return xLinearScale;
+}
+
+// Update yAxis var upon clikc on axis label
+
+function renderYAxes(newYScale, yAxis) {
+    var SideAxis = d3.axisBottom(newYScale);
+    yAxis.transition()
+    .duration(1000)
+    .call(SideAxis);
+    return yAxis;
+}
 // Funtion that updates the circles gruop with a transition
 // to new circles
 
